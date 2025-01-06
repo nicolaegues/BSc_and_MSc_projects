@@ -1,0 +1,29 @@
+
+
+To compile my cpp code:
+-----------------------------------------------------------------------------
+g++ -std=c++17 -fopenmp mini_project_2.cpp -o mini2
+
+
+Also compile the cpp code into a shared library (necessary for the python wrapper):
+-----------------------------------------------------------------------------
+g++ -std=c++17 -fopenmp -fPIC -shared mini_project_2.cpp -o mini2_nicola.so
+
+
+My slurm file looks like this: 
+-----------------------------------------------------------------------------
+#!/bin/bash
+#SBATCH --job-name=testing_cpp
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=16
+#SBATCH --time=00:10:00
+#SBATCH --account=chem033484
+#SBATCH --partition=teach_cpu
+
+module load gcc/12.3.0
+module load languages/python/3.12.3
+
+export OMP_NUM_THREADS=16
+
+./mini2
+python mini2_wrapper.py
